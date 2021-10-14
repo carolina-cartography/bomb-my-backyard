@@ -1,6 +1,5 @@
 
 // Initialize constants
-const RADIAN = 0.0174533
 const CENTER = [18.14, -65.43]
 const ZOOM = 12
 const FORTIN = [18.147407888387857, -65.43913891363856]
@@ -135,10 +134,6 @@ function initializeLeaftlet() {
 	map = L.map('leaflet', { 
 		attributionControl:false,  
 		scrollWheelZoom: true
-	})
-
-	map.on('moveend', function() {
-		console.log(map.getBounds().getCenter())
 	})
 
     // Add Open Street Map layer
@@ -320,9 +315,7 @@ function handleStepChange(step) {
 
 	// Update position, zoom & layers
 	if (steps[step] == "craters") {
-
-		// Special zoom for craters step
-		const offsetCratersCenter = getRelativeCoordinatesForNewPoint(offsetCoords, BOMBS, CENTER, getScaleFactorForNewPoint(offsetCoords, BOMBS))
+		const offsetCratersCenter = getRelativeCoordinatesForNewPoint(offsetCoords, BOMBS, CENTER)
 		map.flyTo(offsetCratersCenter, BOMBS_ZOOM, {
 			duration: 3,
 		})
@@ -364,29 +357,26 @@ function generateNextLanguage() {
 	return LANGUAGE[language].title
 }
 
-function getScaleFactorForNewPoint(newPoint, originalPoint) {
-	return Math.cos(originalPoint[0] * RADIAN) / Math.cos(newPoint[0] * RADIAN)
-} 
-
 function shiftGeoJSONPolygonDataForNewPoint(polygonArray, newPoint) {
-	let scaleFactor = getScaleFactorForNewPoint(newPoint, FORTIN)
 	for (let i in polygonArray) {
 		for (let j in polygonArray[i]) {
 			for (let k in polygonArray[i][j]) {
-				polygonArray[i][j][k] = getRelativeCoordinatesForNewPoint(polygonArray[i][j][k], newPoint, FORTIN, scaleFactor, true)
+				polygonArray[i][j][k] = getRelativeCoordinatesForNewGeoJSONPoint(polygonArray[i][j][k], newPoint, FORTIN)
 			}
 		}
 	}
 }
 
-function getRelativeCoordinatesForNewPoint(coordinates, newPoint, originalPoint, scaleFactor, isGeoJson) {
-	if (!scaleFactor) scaleFactor = 1
-	if (isGeoJson) return [
-		newPoint[1] + (scaleFactor * (coordinates[0] - originalPoint[1])),
-		newPoint[0] + (coordinates[1] - originalPoint[0])
-	]
+function getRelativeCoordinatesForNewPoint(coordinates, newPoint, originalPoint) {
 	return [
-		newPoint[0] + (scaleFactor * (coordinates[0] - originalPoint[0])),
+		newPoint[0] + (coordinates[0] - originalPoint[0]),
 		newPoint[1] + (coordinates[1] - originalPoint[1])
+	]
+}
+
+function getRelativeCoordinatesForNewGeoJSONPoint(coordinates, newPoint, originalPoint) {
+	return [
+		newPoint[1] + (coordinates[0] - originalPoint[1]),
+		newPoint[0] + (coordinates[1] - originalPoint[0])
 	]
 }
