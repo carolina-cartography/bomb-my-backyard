@@ -61,5 +61,6 @@
             <div id="walkthrough-prev" class="element button"></div>
             <div id="walkthrough-next" class="element button next"></div>
         </div>
+        <div id="loading"><img src="loading.gif" /></div>
     </body>
 </html>

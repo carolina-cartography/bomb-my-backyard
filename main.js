@@ -156,7 +156,8 @@ function initializeLeaftlet() {
 }
 
 function initializeData() {
-	$.ajax({
+	let promises = []
+	promises.push($.ajax({
 		dataType: "json",
 		url: "island.geojson",
 		success: function(geojson) {
@@ -165,10 +166,9 @@ function initializeData() {
 				layers.original.island = new L.geoJson(data.island, ISLAND_STYLE)
 				layers.original.island.addTo(map)
 			}
-			
 		}
-	})
-	$.ajax({
+	}))
+	promises.push($.ajax({
 		dataType: "json",
 		url: "navy.geojson",
 		success: function(geojson) {
@@ -178,8 +178,8 @@ function initializeData() {
 				layers.original.navy.addTo(map)
 			}
 		}
-	})
-	$.ajax({
+	}))
+	promises.push($.ajax({
 		dataType: "json",
 		url: "craters.geojson",
 		success: function(geojson) {
@@ -189,6 +189,9 @@ function initializeData() {
 				layers.original.craters.addTo(map)
 			}
 		}
+	}))
+	Promise.all(promises).then(() => {
+		$("#loading").addClass("done")
 	})
 }
 
