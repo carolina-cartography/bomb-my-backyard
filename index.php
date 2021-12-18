@@ -25,9 +25,19 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@300;400;700&display=swap" rel="stylesheet">
 
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-B4PS2QRX03"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-B4PS2QRX03');
+        </script>
+
         <!-- Local Imports -->
         <link rel="stylesheet" href="main.css" />
         <script src="main.js"></script>
+
     </head>
     <body>
         <div class="container">

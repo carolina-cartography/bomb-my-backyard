@@ -46,6 +46,7 @@ div {box-sizing:border-box;}
 }
 .control #address-input {
     width:480px; border:0px; outline:none; font-size:18px; margin-bottom:-1px; background:none;
+    padding:18px 20px; line-height:28px;
 }
 .control .controls {
     float:right; text-align:right;
@@ -57,7 +58,7 @@ div {box-sizing:border-box;}
     background:#a81407; color:white; cursor:pointer;
 }
 .control #about-button {
-    display:inline-block; margin-right:25px; cursor:pointer;
+    /* Currently hidden */ display:none; /* display:inline-block; */ margin-right:25px; cursor:pointer;
 }
 .control #translate {
     display:inline-block; margin-right:25px; vertical-align:middle;
