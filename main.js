@@ -267,6 +267,9 @@ function handleAddressChange(place) {
 	// Setup reset button
 	$("#reset").addClass("active")
 
+	// Save event
+	gtag("event", "submit_address", { googleMapsPlace: place })
+
 	// Get coordinates
 	offsetCoords = [place.geometry.location.lat(), place.geometry.location.lng()]
 	
