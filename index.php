@@ -31,7 +31,7 @@
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-B4PS2QRX03');
+            gtag('config', 'G-J0WM9LG7XH');
         </script>
 
         <!-- Local Imports -->
