@@ -1,5 +1,6 @@
 
 // Initialize constants
+const RADIAN = 0.0174533
 const CENTER = [18.14, -65.43]
 const ZOOM = 12
 const FORTIN = [18.147407888387857, -65.43913891363856]
@@ -76,6 +77,7 @@ let layers = {
 }
 let data = {}
 let offsetCoords
+let scaleFactor = 1
 let currentStep = 0
 
 $(document).ready(() => {
@@ -272,6 +274,9 @@ function handleAddressChange(place) {
 
 	// Get coordinates
 	offsetCoords = [place.geometry.location.lat(), place.geometry.location.lng()]
+
+	// Set scale factor
+	scaleFactor = getScaleFactorForNewPoint(offsetCoords, FORTIN)
 	
 	// Save offset layers =============================================
 
@@ -285,18 +290,18 @@ function handleAddressChange(place) {
 
 	// Island
 	let offsetIslandData = JSON.parse(JSON.stringify(data.island))
-	shiftGeoJSONPolygonDataForNewPoint(offsetIslandData.geometry.coordinates, offsetCoords)
+	shiftGeoJSONPolygonDataForNewPoint(offsetIslandData.geometry.coordinates, offsetCoords, scaleFactor)
 	layers.offset.island = new L.geoJson(offsetIslandData, ISLAND_STYLE)
 
 	// Navy
 	let offsetNavyData = JSON.parse(JSON.stringify(data.navy))
-	shiftGeoJSONPolygonDataForNewPoint(offsetNavyData.geometry.coordinates, offsetCoords)
+	shiftGeoJSONPolygonDataForNewPoint(offsetNavyData.geometry.coordinates, offsetCoords, scaleFactor)
 	layers.offset.navy = new L.geoJson(offsetNavyData, NAVY_STYLE)
 
 	// Craters
 	let offsetCratersData = JSON.parse(JSON.stringify(data.craters))
 	for (let feature of offsetCratersData.features) {
-		shiftGeoJSONPolygonDataForNewPoint(feature.geometry.coordinates, offsetCoords)
+		shiftGeoJSONPolygonDataForNewPoint(feature.geometry.coordinates, offsetCoords, scaleFactor)
 	}
 	layers.offset.craters = new L.geoJson(offsetCratersData, CRATER_STYLE)
 
@@ -312,7 +317,7 @@ function handleAddressChange(place) {
 }
 
 function centerOffset() {
-	const offsetCenter = getRelativeCoordinatesForNewPoint(offsetCoords, CENTER, FORTIN)
+	const offsetCenter = getRelativeCoordinatesForNewPoint(offsetCoords, CENTER, FORTIN, 1)
 	map.setView(offsetCenter, ZOOM)
 }
 
@@ -321,7 +326,7 @@ function handleStepChange(step) {
 
 	// Update position, zoom & layers
 	if (steps[step] == "craters") {
-		const offsetCratersCenter = getRelativeCoordinatesForNewPoint(offsetCoords, BOMBS, CENTER)
+		const offsetCratersCenter = getRelativeCoordinatesForNewPoint(offsetCoords, BOMBS, CENTER, 1)
 		map.flyTo(offsetCratersCenter, BOMBS_ZOOM, {
 			duration: 3,
 		})
@@ -363,26 +368,30 @@ function generateNextLanguage() {
 	return LANGUAGE[language].title
 }
 
-function shiftGeoJSONPolygonDataForNewPoint(polygonArray, newPoint) {
+function getScaleFactorForNewPoint(newPoint, originalPoint) {
+	return Math.cos(newPoint[0] * RADIAN) / Math.cos(originalPoint[0] * RADIAN)
+}
+
+function shiftGeoJSONPolygonDataForNewPoint(polygonArray, newPoint, scaleFactor) {
 	for (let i in polygonArray) {
 		for (let j in polygonArray[i]) {
 			for (let k in polygonArray[i][j]) {
-				polygonArray[i][j][k] = getRelativeCoordinatesForNewGeoJSONPoint(polygonArray[i][j][k], newPoint, FORTIN)
+				polygonArray[i][j][k] = getRelativeCoordinatesForNewGeoJSONPoint(polygonArray[i][j][k], newPoint, FORTIN, scaleFactor)
 			}
 		}
 	}
 }
 
-function getRelativeCoordinatesForNewPoint(coordinates, newPoint, originalPoint) {
+function getRelativeCoordinatesForNewPoint(coordinates, newPoint, originalPoint, scaleFactor) {
 	return [
 		newPoint[0] + (coordinates[0] - originalPoint[0]),
-		newPoint[1] + (coordinates[1] - originalPoint[1])
+		newPoint[1] + (scaleFactor * (coordinates[1] - originalPoint[1]))
 	]
 }
 
-function getRelativeCoordinatesForNewGeoJSONPoint(coordinates, newPoint, originalPoint) {
+function getRelativeCoordinatesForNewGeoJSONPoint(coordinates, newPoint, originalPoint, scaleFactor) {
 	return [
 		newPoint[1] + (coordinates[0] - originalPoint[1]),
-		newPoint[0] + (coordinates[1] - originalPoint[0])
+		newPoint[0] + (scaleFactor * (coordinates[1] - originalPoint[0]))
 	]
 }
