@@ -10,7 +10,7 @@ const LANGUAGE = {
 	es: {
 		lang: "Espa&ntilde;ol",
 		title: "&iexcl;Bombardea mi patio!",
-		input: "Ingrese su direccion...",
+		input: "Ingrese una direccion...",
 		marker: "Est&aacute;s aqu&iacute; (El Fort&iacute;n Conde de Mirasol)",
 		address: "Su direccion, como El Fort&iacute;n",
 		reset: "De nuevo",
@@ -27,7 +27,7 @@ const LANGUAGE = {
 	en: {
 		lang: "English",
 		title: "Bomb my backyard!",
-		input: "Enter your address...",
+		input: "Enter an address...",
 		marker: "You are here (El Fort&iacute;n Conde de Mirasol)",
 		address: "Your address, as El Fort&iacute;n",
 		reset: "Reset",
