@@ -10,13 +10,13 @@ const LANGUAGE = {
 	es: {
 		lang: "Espa&ntilde;ol",
 		title: "&iexcl;Bombardea mi patio!",
-		input: "Ingrese una direccion...",
+		input: "Ingrese una dirección...",
 		marker: "Est&aacute;s aqu&iacute; (El Fort&iacute;n Conde de Mirasol)",
-		address: "Su direccion, como El Fort&iacute;n",
+		address: "Su dirección, como El Fort&iacute;n",
 		reset: "De nuevo",
 		about: {
 			title: "Sobre",
-			content:  "Explanation here",
+			content:  "Una explicación aquí",
 		},
 		step: "Paso",
 		of: "de",
