@@ -8,5 +8,5 @@ For development, a key without domain restricts, or with 'localhost' domain rest
 
 To work with this page in development, add an `.htaccess` file to this directory with the following format:
 ```
-SetEnv HTTP_LOCAL_GOOGLE_API_KEY "your development Google Cloud API key"
+SetEnv HTTP_LOCAL_GOOGLE_API_KEY "your development Google Cloud API key" 
 ```
