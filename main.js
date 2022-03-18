@@ -1,5 +1,7 @@
 
 // Initialize constants
+var timer;
+var timerStep;
 const RADIAN = 0.0174533
 const CENTER = [18.14, -65.43]
 const ZOOM = 12
@@ -350,7 +352,8 @@ function handleStepChange(step) {
 	else $("#walkthrough-prev").removeClass("disabled")
 	if (currentStep == steps.length - 1) $("#walkthrough-next").addClass("disabled")
 	else $("#walkthrough-next").removeClass("disabled")
-
+	clearTimeout(timerStep);
+    timerStep = setTimeout(moveForward, 5000)
 	// Change button text
 	$("#walkthrough-step").html(generateStepLanguage())
 	$("#walkthrough-next").html(generateNextLanguage())
@@ -363,9 +366,16 @@ function generateStepLanguage() {
 }
 
 function generateNextLanguage() {
-	if (currentStep == 0)
-		return LANGUAGE[language].occupy
-	return LANGUAGE[language].title
+	if (currentStep == 0){
+		// console.log('muevete')
+		return LANGUAGE[language].occupy}
+	if (currentStep == 1){
+		// console.log('ocupy')
+		return LANGUAGE[language].title}
+	if (currentStep == 2){
+		// console.log('bomb')
+		return LANGUAGE[language].title} 
+		// I did this because I am thinking that I could add some buttons with information about the area occupied and the craters
 }
 
 function getScaleFactorForNewPoint(newPoint, originalPoint) {
@@ -395,3 +405,52 @@ function getRelativeCoordinatesForNewGeoJSONPoint(coordinates, newPoint, origina
 		newPoint[0] + (scaleFactor * (coordinates[1] - originalPoint[0]))
 	]
 }
+
+
+
+////////functions made done after the oppening 
+function fromStart(){
+  center()
+  reset()
+  clear()
+  clearTimeout(timer)
+  clearTimeout(timerStep)
+}
+
+function moveForward(){
+	if (currentStep >= 2) {clearTimeout(timerStep)}
+	if (currentStep < 2) {handleStepChange(currentStep+1)}
+	if (currentStep == 0) {handleStepChange(currentStep+1)}
+
+}
+
+document.addEventListener("click", myClick);
+function myClick() {
+	// mTest()
+	clearTimeout(timer);
+    timer = setTimeout(fromStart, 45000)
+}
+
+document.addEventListener("mousemove", myMove);
+function myMove() {
+	clearTimeout(timer);
+    timer = setTimeout(fromStart, 45000)
+}
+
+document.addEventListener("keydown", myMove);
+function myMove() {
+	clearTimeout(timer);
+    timer = setTimeout(fromStart, 45000)
+}
+
+
+
+// make a legend about the craters 
+// make an arrow animation to remind people to click the botton (now I have it annimated)
+//
+// gif project 
+// make a gif with the same proportions as the bombMyBackyard screen. 
+// the gif with Instructions
+// Type an address some place do the sequence 
+// type another address in the US were bombing happens
+// place it another  
