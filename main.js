@@ -389,6 +389,7 @@ function handleStepChange(step) {
 	else $("#walkthrough-next").removeClass("disabled")
 	clearTimeout(timerStep);
     timerStep = setTimeout(moveForward, 10000)
+
 	// Change button text
 	$("#walkthrough-step").html(generateStepLanguage())
 	$("#walkthrough-next").html(generateNextLanguage())
