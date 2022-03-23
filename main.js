@@ -24,7 +24,7 @@ const LANGUAGE = {
 		of: "de",
 		next: "Pr&oacute;ximo >",
 		prev: "< Previo",
-		occupy: "&iexcl;Occupa mi patio!"
+		occupy: "&iexcl;Ocupa mi patio!"
 	},
 	en: {
 		lang: "English",
@@ -234,6 +234,12 @@ function reset() {
 
 	// Reset button
 	$("#reset").removeClass("active")
+
+	// remove legends
+	document.getElementById('legends-crater').style.visibility = 'hidden'
+	document.getElementById('legends-occupy').style.visibility = 'hidden'
+
+
 }
 
 function handleLanguageChange() {
@@ -257,8 +263,29 @@ function handleLanguageChange() {
 	$("#walkthrough-step").html(generateStepLanguage())
 }
 
-function handleAddressChange(place) {
+var elPlace = {
+	"formatted_address": "San Juan, Puerto Rico",
+	"geometry": {
+	  "location": {'lat':function(){return '18.29764799729579'}
 
+	  },
+	  "viewport": {
+		"wb": {
+		  "h": 18.29764799729579,
+		  "j": 18.48082688120937
+		},
+		"Sa": {
+		  "h": -66.12940294982566,
+		  "j": -65.99154200076264
+		}
+	  }
+	},
+	"name": "San Juan",
+	"html_attributions": []
+  }
+function handleAddressChange(place) {
+	elPlace = place
+	// console.log(place)
 	// Clear last marker and outline
 	reset()
 
@@ -328,18 +355,26 @@ function handleStepChange(step) {
 
 	// Update position, zoom & layers
 	if (steps[step] == "craters") {
-		const offsetCratersCenter = getRelativeCoordinatesForNewPoint(offsetCoords, BOMBS, CENTER, 1)
+	const offsetCratersCenter = getRelativeCoordinatesForNewPoint(offsetCoords, BOMBS, CENTER, 1)
 		map.flyTo(offsetCratersCenter, BOMBS_ZOOM, {
 			duration: 3,
 		})
 		setTimeout(function() {
 			map.addLayer(layers.offset.craters)
+			document.getElementById('legends-crater').style.visibility = 'visible'
 		}, 3000)
+		
+
+		
 	} else {
 		if (step < currentStep) {
+			document.getElementById('legends-crater').style.visibility = 'hidden'
+			if (step==0){document.getElementById('legends-occupy').style.visibility = 'hidden'}
 			centerOffset()
 			map.removeLayer(layers.offset[steps[step+1]])
 		} else {
+			console.log('quizas pon leyenda terreno')
+			if (step==1){document.getElementById('legends-occupy').style.visibility = 'visible'}
 			map.addLayer(layers.offset[steps[step]])
 		}
 	}
@@ -353,7 +388,7 @@ function handleStepChange(step) {
 	if (currentStep == steps.length - 1) $("#walkthrough-next").addClass("disabled")
 	else $("#walkthrough-next").removeClass("disabled")
 	clearTimeout(timerStep);
-    timerStep = setTimeout(moveForward, 5000)
+    timerStep = setTimeout(moveForward, 10000)
 	// Change button text
 	$("#walkthrough-step").html(generateStepLanguage())
 	$("#walkthrough-next").html(generateNextLanguage())

@@ -78,6 +78,12 @@ div {box-sizing:border-box;}
 /* Walkthrough styles */
 #walkthrough {
     position:absolute; bottom:0px; left:0px; right:52px; width:auto; padding:20px; z-index:20; display:none;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; 
 }
 #walkthrough.active {display:block;}
 #walkthrough .element {display:inline-block; color:white; font-size:18px; padding:10px 15px; background:#333;}
@@ -111,3 +117,13 @@ div {box-sizing:border-box;}
 }
 #loading img {width:40px;}
 #loading.done {display:none;}
+
+#legends {position:absolute; bottom:0px; right:100px; width:auto; padding:20px; z-index:20;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; }
+#legends-occupy {display:inline-block; color:white; font-size:24px; padding:9px 28px;background:#2B7F8B; border-style:solid; border-color: #0c525d;opacity: .8;;height: 50px; width: 450px;visibility: hidden}
+#legends-crater {display:inline-block; color:white; font-size:20px; padding:35px 8px; background:#A81407;border-radius: 50%; width: 100px; height: 100px;opacity: .8; border-style:solid; border-color:#560902;visibility: hidden}
