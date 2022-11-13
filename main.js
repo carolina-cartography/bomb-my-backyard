@@ -1,13 +1,13 @@
 
 // Initialize constants
-var timer;
-var timerStep;
 const RADIAN = 0.0174533
 const CENTER = [18.14, -65.43]
 const ZOOM = 12
+const ZOOM_MOBILE = 11
 const FORTIN = [18.147407888387857, -65.43913891363856]
 const BOMBS = [18.136207887439014, -65.29454961419106]
 const BOMBS_ZOOM = 14
+const BOMBS_ZOOM_MOBILE = 13
 const LANGUAGE = {
 	es: {
 		lang: "Espa&ntilde;ol",
@@ -18,7 +18,7 @@ const LANGUAGE = {
 		reset: "De nuevo",
 		about: {
 			title: "Sobre",
-			content:  "Una explicación aquí",
+			content:  "Una explicación vendrá pronto",
 		},
 		step: "Paso",
 		of: "de",
@@ -35,7 +35,7 @@ const LANGUAGE = {
 		reset: "Reset",
 		about: {
 			title: "About",
-			content: "Explanation here",
+			content: "During the US Navy's occupation of Vieques (1941-2003), the Navy occupied 22,000 acres of the island and conducted live bombing exercises. \"Bomb my Backyard\", named for the \"Not in My Backyard\" sentiment, allows you to visualize the extent of the Navy occupation and the proximity of the bombing exercises by placing an overlay of Vieques centered on an address of your choice. <br /><br />\"Bomb My Backyard\" was introduced at an exhibit hosted in El Fortín Conde de Mirasol in Isabel Segunda, Vieques. We use the distance between El Fortín and Navy actitivies when creating the overlay for the address you provide.",
 		},
 		step: "Step",
 		of: "of",
@@ -93,6 +93,15 @@ $(document).ready(() => {
 })
 
 // Initializers ============================================
+
+function getZoom(isBomb) {
+	if ($(window).width() < 960) {
+		if (isBomb) return BOMBS_ZOOM_MOBILE
+		return ZOOM_MOBILE 
+	}
+	if (isBomb) return BOMBS_ZOOM
+	return ZOOM
+}
 
 function initializeAddressFinder() {
 	const input = document.getElementById("address-input")
@@ -211,7 +220,7 @@ function initializeWalkthrough() {
 // Handlers ===================================================
 
 function center() {
-	map.setView(CENTER, ZOOM)
+	map.setView(CENTER, getZoom())
 }
 
 function clear() {
@@ -234,11 +243,6 @@ function reset() {
 
 	// Reset button
 	$("#reset").removeClass("active")
-
-	// remove legends
-	document.getElementById('legends-crater').style.visibility = 'hidden'
-	document.getElementById('legends-occupy').style.visibility = 'hidden'
-
 
 }
 
@@ -263,30 +267,7 @@ function handleLanguageChange() {
 	$("#walkthrough-step").html(generateStepLanguage())
 }
 
-var elPlace = {
-	"formatted_address": "San Juan, Puerto Rico",
-	"geometry": {
-	  "location": {'lat':function(){return '18.29764799729579'}
-
-	  },
-	  "viewport": {
-		"wb": {
-		  "h": 18.29764799729579,
-		  "j": 18.48082688120937
-		},
-		"Sa": {
-		  "h": -66.12940294982566,
-		  "j": -65.99154200076264
-		}
-	  }
-	},
-	"name": "San Juan",
-	"html_attributions": []
-  }
 function handleAddressChange(place) {
-	elPlace = place
-	// console.log(place)
-	// Clear last marker and outline
 	reset()
 
 	// Handle non-existent place input
@@ -347,7 +328,7 @@ function handleAddressChange(place) {
 
 function centerOffset() {
 	const offsetCenter = getRelativeCoordinatesForNewPoint(offsetCoords, CENTER, FORTIN, 1)
-	map.setView(offsetCenter, ZOOM)
+	map.setView(offsetCenter, getZoom())
 }
 
 const steps = ["island", "navy", "craters"]
@@ -355,26 +336,18 @@ function handleStepChange(step) {
 
 	// Update position, zoom & layers
 	if (steps[step] == "craters") {
-	const offsetCratersCenter = getRelativeCoordinatesForNewPoint(offsetCoords, BOMBS, CENTER, 1)
-		map.flyTo(offsetCratersCenter, BOMBS_ZOOM, {
+		const offsetCratersCenter = getRelativeCoordinatesForNewPoint(offsetCoords, BOMBS, CENTER, 1)
+		map.flyTo(offsetCratersCenter, getZoom(true), {
 			duration: 3,
 		})
 		setTimeout(function() {
 			map.addLayer(layers.offset.craters)
-			document.getElementById('legends-crater').style.visibility = 'visible'
 		}, 3000)
-		
-
-		
 	} else {
 		if (step < currentStep) {
-			document.getElementById('legends-crater').style.visibility = 'hidden'
-			if (step==0){document.getElementById('legends-occupy').style.visibility = 'hidden'}
 			centerOffset()
 			map.removeLayer(layers.offset[steps[step+1]])
 		} else {
-			console.log('quizas pon leyenda terreno')
-			if (step==1){document.getElementById('legends-occupy').style.visibility = 'visible'}
 			map.addLayer(layers.offset[steps[step]])
 		}
 	}
@@ -387,8 +360,6 @@ function handleStepChange(step) {
 	else $("#walkthrough-prev").removeClass("disabled")
 	if (currentStep == steps.length - 1) $("#walkthrough-next").addClass("disabled")
 	else $("#walkthrough-next").removeClass("disabled")
-	clearTimeout(timerStep);
-    timerStep = setTimeout(moveForward, 10000)
 
 	// Change button text
 	$("#walkthrough-step").html(generateStepLanguage())
@@ -403,15 +374,11 @@ function generateStepLanguage() {
 
 function generateNextLanguage() {
 	if (currentStep == 0){
-		// console.log('muevete')
 		return LANGUAGE[language].occupy}
 	if (currentStep == 1){
-		// console.log('ocupy')
 		return LANGUAGE[language].title}
 	if (currentStep == 2){
-		// console.log('bomb')
 		return LANGUAGE[language].title} 
-		// I did this because I am thinking that I could add some buttons with information about the area occupied and the craters
 }
 
 function getScaleFactorForNewPoint(newPoint, originalPoint) {
@@ -441,52 +408,3 @@ function getRelativeCoordinatesForNewGeoJSONPoint(coordinates, newPoint, origina
 		newPoint[0] + (scaleFactor * (coordinates[1] - originalPoint[0]))
 	]
 }
-
-
-
-////////functions made done after the oppening 
-function fromStart(){
-  center()
-  reset()
-  clear()
-  clearTimeout(timer)
-  clearTimeout(timerStep)
-}
-
-function moveForward(){
-	if (currentStep >= 2) {clearTimeout(timerStep)}
-	if (currentStep < 2) {handleStepChange(currentStep+1)}
-	if (currentStep == 0) {handleStepChange(currentStep+1)}
-
-}
-
-document.addEventListener("click", myClick);
-function myClick() {
-	// mTest()
-	clearTimeout(timer);
-    timer = setTimeout(fromStart, 45000)
-}
-
-document.addEventListener("mousemove", myMove);
-function myMove() {
-	clearTimeout(timer);
-    timer = setTimeout(fromStart, 45000)
-}
-
-document.addEventListener("keydown", myMove);
-function myMove() {
-	clearTimeout(timer);
-    timer = setTimeout(fromStart, 45000)
-}
-
-
-
-// make a legend about the craters 
-// make an arrow animation to remind people to click the botton (now I have it annimated)
-//
-// gif project 
-// make a gif with the same proportions as the bombMyBackyard screen. 
-// the gif with Instructions
-// Type an address some place do the sequence 
-// type another address in the US were bombing happens
-// place it another  

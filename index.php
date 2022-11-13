@@ -18,6 +18,7 @@
         </script>
 
         <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- jQuery -->
         <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
@@ -70,14 +71,6 @@
             <div id="walkthrough-step" class="element"></div>
             <div id="walkthrough-prev" class="element button"></div>
             <div id="walkthrough-next" class="element button next"></div>
-        </div>
-        
-        <div id='legends'>
-        <div id="legends-crater">cráteres</div>
-        <div id="legends-occupy">terrenos ocupados por la Marina</div>
-        
-
-            
         </div>
         
         <div id="loading"><img src="loading.gif" /></div>
