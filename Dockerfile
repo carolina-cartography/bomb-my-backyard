@@ -1,6 +1,7 @@
 # Adapted from https://wiki.alpinelinux.org/wiki/Nginx_with_PHP
 FROM alpine
 
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 RUN apk add nginx php7 php7-fpm php7-opcache
 COPY ./nginx.conf /etc/nginx/nginx.conf
 RUN adduser -D -g 'www' www && \
