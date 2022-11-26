@@ -46,7 +46,7 @@ div {box-sizing:border-box;}
     background:#333; color:white; font-size:18px; font-weight:bold;
 }
 .control #address-input {
-    width:320px; border:0px; outline:none; font-size:18px; margin-bottom:-1px; background:none;
+    max-width:36%; width:100%; border:0px; outline:none; font-size:18px; margin-bottom:-1px; background:none;
     padding:18px 20px; line-height:28px;
 }
 .control .controls {
